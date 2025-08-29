@@ -1,0 +1,56 @@
+.icon-header-link {
+  display: none;
+  font-family: 'Arial';
+  font-size: 0.85em;
+  color: #697586;
+  text-decoration: none;
+  margin-left: 0.3em;
+}
+
+h1:hover .icon-header-link,
+h2:hover .icon-header-link,
+h3:hover .icon-header-link,
+h4:hover .icon-header-link,
+h5:hover .icon-header-link,
+h6:hover .icon-header-link {
+  display: inline-block;
+}
+
+.post {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.post h2 {
+  border-bottom: 1.5px solid #697586;
+  padding-bottom: 0.3em;
+  margin-bottom: 1.2em;
+}
+
+.post h3 {
+  border-bottom: 0.5px solid #697586;
+  padding-bottom: 0.3em;
+  margin-bottom: 1.2em;
+}
+
+.post ul li::marker,
+.post ol li::marker {
+  color: #2196f3;
+}
+
+.post ul ul::marker,
+.post ol ol::marker,
+.post ul ol::marker,
+.post ol ul::marker {
+  color: #2196f3;
+}
+
+.post blockquote {
+  border-left: 4px solid #2196f3;
+  padding: 0 1em;
+  margin: 1.5em 0;
+}
+
+.text-red { color: #f44336; }
+.text-blue { color: #2196f3; }
+.text-green { color: #00c853; }
