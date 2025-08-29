@@ -18,7 +18,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -57,19 +57,19 @@ export default function TemporaryDrawer() {
     return pathname === to;
   }
 
-  function getBgColor(active: boolean, theme: any) {
+  function getBgColor(active: boolean, theme: Theme) {
     if (active) return theme.palette.primary.main;
     return 'transparent';
   }
 
-  function getHoverBgColor(active: boolean, theme: any) {
+  function getHoverBgColor(active: boolean, theme: Theme) {
     if (active) return theme.palette.primary.main;
     return theme.palette.mode === 'dark'
       ? theme.palette.grey[700]
       : theme.palette.primary.light;
   }
 
-  function getTextColor(active: boolean, theme: any) {
+  function getTextColor(active: boolean, theme: Theme) {
     return active ? 'white' : theme.palette.text.primary;
   }
 
