@@ -13,4 +13,5 @@ export type PostType = {
   };
   content: string;
   tags: string[];
+  fix?: boolean;
 };
