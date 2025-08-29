@@ -1,6 +1,7 @@
 'use client';
 
 import PostMeta from '@/components/post-meta';
+import excerptFromMarkdown from '@/lib/excerptFromMarkdown';
 import { PostType } from '@/types/post';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -125,7 +126,7 @@ export const PostCard = ({ posts }: Props) => {
                 color="text.secondary"
                 gutterBottom
               >
-                {post.excerpt}
+                {excerptFromMarkdown(post.content)}
               </StyledTypography>
             </StyledCardContent>
             <Box sx={{ padding: '16px' }}>
