@@ -1,7 +1,6 @@
 export type PostType = {
   slug: string;
   title: string;
-  excerpt: string;
   coverImage: string;
   date: string;
   update?: string;
