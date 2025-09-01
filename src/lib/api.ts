@@ -24,8 +24,18 @@ export const getPostBySlug = (slug: string) => {
 
 export const getAllPosts = (): PostType[] => {
   const slugs = getPostSlugs();
-  const posts = slugs
-    .map((slug) => getPostBySlug(slug))
-    .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+  const posts = slugs.map((slug) => getPostBySlug(slug));
+  const fixCount = posts.filter((post) => post.fix).length;
+  
+  if (fixCount > 1) {
+    throw new Error('Multiple posts with fix: true found');
+  }
+
+  posts.sort((post1, post2) => {
+    if (post1.fix && !post2.fix) return -1;
+    if (!post1.fix && post2.fix) return 1;
+    return post1.date > post2.date ? -1 : 1;
+  });
+
   return posts;
 };
