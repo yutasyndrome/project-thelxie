@@ -3,10 +3,12 @@
 import PostMeta from '@/components/post-meta';
 import excerptFromMarkdown from '@/lib/excerptFromMarkdown';
 import { PostType } from '@/types/post';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -99,6 +101,14 @@ export const PostCard = ({ posts }: Props) => {
                   overflow: 'auto',
                 }}
               >
+                {post.fix && (
+                  <Chip
+                    icon={<PushPinIcon />}
+                    label="Pinned"
+                    color="primary"
+                    size="small"
+                  />
+                )}
                 {post.tags.map((tag) => (
                   <ClickableChip tag={tag} key={tag} />
                 ))}
@@ -114,6 +124,14 @@ export const PostCard = ({ posts }: Props) => {
                   rowGap: 1,
                 }}
               >
+                {post.fix && (
+                  <Chip
+                    icon={<PushPinIcon />}
+                    label="Pinned"
+                    color="primary"
+                    size="small"
+                  />
+                )}
                 {post.tags.map((tag) => (
                   <ClickableChip tag={tag} key={tag} />
                 ))}

@@ -11,6 +11,7 @@ ogImage:
 tags:
   - 'tag01'
   - 'tag02'
+fix: true
 ---
 
 ## Lorem Ipsum
