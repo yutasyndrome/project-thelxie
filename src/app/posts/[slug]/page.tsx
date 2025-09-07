@@ -77,6 +77,8 @@ export default async function Post(props: Params) {
             display: { xs: 'none', sm: 'block' },
             position: 'sticky',
             top: 96,
+            maxHeight: 'calc(100vh - 96px)',
+            overflowY: 'auto',
           }}
         >
           <Toc tocItems={tocItems} />
