@@ -153,7 +153,7 @@ export const getTheme = (isDarkMode: boolean) =>
       },
       divider: isDarkMode ? '#4b5565' : '#e0e0e0',
       background: isDarkMode
-        ? { default: '#1e2022', paper: '#1e1e1e' }
+        ? { default: '#1e1b19', paper: '#1e2022' }
         : { default: '#eef2f6', paper: '#ffffff' },
     },
     components: {
