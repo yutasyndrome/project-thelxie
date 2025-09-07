@@ -21,6 +21,16 @@ h6:hover .icon-header-link {
   line-height: 1.8;
 }
 
+.post h2,
+.post h3,
+.post h4,
+.post h5,
+.post h6 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .post h2 {
   border-bottom: 1.5px solid #697586;
   padding-bottom: 0.3em;

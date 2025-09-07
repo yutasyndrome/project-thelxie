@@ -7,10 +7,14 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
 
-export default function Toc({ tocItems }: { tocItems: TocItemType[] }) {
+type Props = {
+  tocItems: TocItemType[];
+  onLinkClick?: (id: string) => void;
+};
+
+export default function PostToc({ tocItems, onLinkClick }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  // スクロール連動でアクティブ見出しを判定
   useEffect(() => {
     const handler = () => {
       let currentId: string | null = null;
@@ -30,10 +34,8 @@ export default function Toc({ tocItems }: { tocItems: TocItemType[] }) {
   return (
     <Box
       sx={{
-        width: 260,
         flexShrink: 0,
         position: 'sticky',
-        top: 96,
         alignSelf: 'flex-start',
         color: 'text.primary',
         backgroundColor: 'background.paper',
@@ -56,34 +58,53 @@ export default function Toc({ tocItems }: { tocItems: TocItemType[] }) {
                 marginLeft: item.level === 3 ? 16 : 0,
                 position: 'relative',
                 marginBottom: 8,
+                overflow: 'hidden',
+                whiteSpace: 'normal',
+                wordBreak: 'break-word',
               }}
             >
-              {/* カスタムマーカー */}
               <span
                 style={{
-                  display: 'inline-block',
-                  width: item.level === 2 ? 9 : 6,
-                  height: item.level === 2 ? 9 : 6,
-                  borderRadius: '50%',
-                  background: '#2196f3',
-                  marginRight: 8,
-                  verticalAlign: 'middle',
-                  transition: 'background 0.2s, opacity 0.2s',
-                  opacity: activeId === item.id ? 1 : 0.5,
-                }}
-              />
-              <a
-                href={`#${item.id}`}
-                style={{
-                  color: 'inherit',
-                  fontWeight: item.level === 2 ? 700 : 500,
-                  textDecoration: 'none',
-                  opacity: activeId === item.id ? 1 : 0.6,
-                  transition: 'color 0.2s, opacity 0.2s',
+                  display: 'inline-flex', // ここでマーカーとテキストをグループ化
+                  minWidth: 0,
+                  width: '100%',
                 }}
               >
-                {item.text}
-              </a>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    flexShrink: 0,
+                    width: item.level === 2 ? 9 : 6,
+                    height: item.level === 2 ? 9 : 6,
+                    borderRadius: '50%',
+                    background: '#2196f3',
+                    marginRight: 8,
+                    marginTop: item.level === 2 ? '0.36em' : '0.46em',
+                    transition: 'background 0.2s, opacity 0.2s',
+                    opacity: activeId === item.id ? 1 : 0.5,
+                  }}
+                />
+                <a
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onLinkClick?.(item.id);
+                    window.location.hash = item.id;
+                  }}
+                  style={{
+                    color: 'inherit',
+                    fontWeight: item.level === 2 ? 700 : 500,
+                    textDecoration: 'none',
+                    opacity: activeId === item.id ? 1 : 0.6,
+                    transition: 'color 0.2s, opacity 0.2s',
+                    wordBreak: 'break-word',
+                    minWidth: 0,
+                    flex: 1,
+                  }}
+                >
+                  {item.text}
+                </a>
+              </span>
             </li>
           ))}
         </ul>

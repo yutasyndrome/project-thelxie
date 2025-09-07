@@ -1,6 +1,7 @@
 import ClickableChip from '@/components/clickable-chip';
 import PostMeta from '@/components/post-meta';
 import Toc from '@/components/post-toc';
+import TocFab from '@/components/toc-fab';
 import { getAllPosts, getPostBySlug } from '@/lib/api';
 import { BORDER_RADIUS } from '@/lib/constants';
 import markdownToHtml from '@/lib/markdownToHtml';
@@ -40,7 +41,7 @@ export default async function Post(props: Params) {
           minWidth: 0,
           backgroundColor: 'background.paper',
           borderRadius: `${BORDER_RADIUS}px`,
-          p: 4,
+          p: { xs: 2, sm: 4 },
         }}
       >
         <Typography variant="h3" sx={{ mb: 2 }}>
@@ -68,7 +69,30 @@ export default async function Post(props: Params) {
         </Box>
         <div className="post" dangerouslySetInnerHTML={{ __html: html }} />
       </Box>
-      <Toc tocItems={tocItems} />
+      {/* 目次（デスクトップ表示） */}
+      <Box
+        sx={{
+          width: 260,
+          flexShrink: 0,
+          display: { xs: 'none', sm: 'block' },
+          position: 'sticky',
+          top: 96,
+        }}
+      >
+        <Toc tocItems={tocItems} />
+      </Box>
+      {/* 目次FAB（モバイル表示） */}
+      <Box
+        sx={{
+          display: { xs: 'block', sm: 'none' },
+          position: 'fixed',
+          right: 20,
+          bottom: 20,
+          zIndex: 1200,
+        }}
+      >
+        <TocFab tocItems={tocItems} />
+      </Box>
     </Box>
   );
 }
