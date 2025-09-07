@@ -1,5 +1,6 @@
 import ClickableChip from '@/components/clickable-chip';
 import PostMeta from '@/components/post-meta';
+import Toc from '@/components/post-toc';
 import { getAllPosts, getPostBySlug } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import Box from '@mui/material/Box';
@@ -22,7 +23,7 @@ export default async function Post(props: Params) {
     return notFound();
   }
 
-  const content = await markdownToHtml(post.content || '');
+  const { html, tocItems } = await markdownToHtml(post.content || '');
 
   return (
     <>
@@ -49,7 +50,8 @@ export default async function Post(props: Params) {
           update={post.update ?? ''}
         />
       </Box>
-      <div className="post" dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="post" dangerouslySetInnerHTML={{ __html: html }} />
+      <Toc tocItems={tocItems} />
     </>
   );
 }

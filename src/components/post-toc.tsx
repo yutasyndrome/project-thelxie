@@ -1,6 +1,6 @@
 import { TocItemType } from '@/types/toc';
 
-function Toc({ tocItems }: { tocItems: TocItemType[] }) {
+export default function Toc({ tocItems }: { tocItems: TocItemType[] }) {
   return (
     <nav className="toc">
       <ul>
