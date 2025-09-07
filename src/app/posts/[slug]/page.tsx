@@ -69,7 +69,6 @@ export default async function Post(props: Params) {
         </Box>
         <div className="post" dangerouslySetInnerHTML={{ __html: html }} />
       </Box>
-      {/* 目次（デスクトップ表示） */}
       {tocItems.length > 0 && (
         <Box
           sx={{
@@ -83,7 +82,6 @@ export default async function Post(props: Params) {
           <Toc tocItems={tocItems} />
         </Box>
       )}
-      {/* 目次FAB（モバイル表示） */}
       {tocItems.length > 0 && (
         <Box
           sx={{
