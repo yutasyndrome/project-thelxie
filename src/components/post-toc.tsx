@@ -65,7 +65,7 @@ export default function PostToc({ tocItems, onLinkClick }: Props) {
             >
               <span
                 style={{
-                  display: 'inline-flex', // ここでマーカーとテキストをグループ化
+                  display: 'inline-flex',
                   minWidth: 0,
                   width: '100%',
                 }}

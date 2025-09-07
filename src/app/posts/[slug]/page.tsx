@@ -39,9 +39,9 @@ export default async function Post(props: Params) {
         sx={{
           flex: 1,
           minWidth: 0,
-          backgroundColor: 'background.paper',
+          backgroundColor: { sm: 'background.paper' },
           borderRadius: `${BORDER_RADIUS}px`,
-          p: { xs: 2, sm: 4 },
+          p: { xs: 0, sm: 4 },
         }}
       >
         <Typography variant="h3" sx={{ mb: 2 }}>
@@ -70,29 +70,33 @@ export default async function Post(props: Params) {
         <div className="post" dangerouslySetInnerHTML={{ __html: html }} />
       </Box>
       {/* 目次（デスクトップ表示） */}
-      <Box
-        sx={{
-          width: 260,
-          flexShrink: 0,
-          display: { xs: 'none', sm: 'block' },
-          position: 'sticky',
-          top: 96,
-        }}
-      >
-        <Toc tocItems={tocItems} />
-      </Box>
+      {tocItems.length > 0 && (
+        <Box
+          sx={{
+            width: 260,
+            flexShrink: 0,
+            display: { xs: 'none', sm: 'block' },
+            position: 'sticky',
+            top: 96,
+          }}
+        >
+          <Toc tocItems={tocItems} />
+        </Box>
+      )}
       {/* 目次FAB（モバイル表示） */}
-      <Box
-        sx={{
-          display: { xs: 'block', sm: 'none' },
-          position: 'fixed',
-          right: 20,
-          bottom: 20,
-          zIndex: 1200,
-        }}
-      >
-        <TocFab tocItems={tocItems} />
-      </Box>
+      {tocItems.length > 0 && (
+        <Box
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            position: 'fixed',
+            right: 20,
+            bottom: 20,
+            zIndex: 1200,
+          }}
+        >
+          <TocFab tocItems={tocItems} />
+        </Box>
+      )}
     </Box>
   );
 }
