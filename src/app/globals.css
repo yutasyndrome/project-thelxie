@@ -25,12 +25,14 @@ h6:hover .icon-header-link {
   border-bottom: 1.5px solid #697586;
   padding-bottom: 0.3em;
   margin-bottom: 1.2em;
+  scroll-margin-top: 70px;
 }
 
 .post h3 {
   border-bottom: 0.5px solid #697586;
   padding-bottom: 0.3em;
   margin-bottom: 1.2em;
+  scroll-margin-top: 70px;
 }
 
 .post ul li::marker,
