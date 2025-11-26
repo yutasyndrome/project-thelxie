@@ -51,7 +51,7 @@ export default function TocFab({ tocItems }: Props) {
               width: '100vw',
               maxWidth: '100vw',
               left: 0,
-              maxHeight: '90vh',
+              maxHeight: '75vh',
               overflowY: 'auto',
             },
             ref: paperRef,
