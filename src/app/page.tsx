@@ -1,12 +1,13 @@
+import Container from '@/components/feature/container';
+
 export default function Home() {
   return (
-    <main
-      style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}
-    >
-      <header>
-        <h1 style={{ margin: 0 }}>Home</h1>
-        <p style={{ marginTop: 8 }}>This page is under development...</p>
-      </header>
+    <main className="flex-1">
+      <Container>
+        <h1 className="mr-10 mb-10 text-center text-4xl font-bold">
+          Welcome to the Project Thelxie!
+        </h1>
+      </Container>
     </main>
   );
 }
