@@ -1,10 +1,5 @@
-import { PostCard } from '@/components/post-card';
-import TagPaginationClient from '@/components/tag-pagination';
 import { getAllPosts } from '@/lib/api';
 import { PAGINATION_OFFSET } from '@/lib/constants';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { notFound } from 'next/navigation';
 
 type Params = {
@@ -30,22 +25,16 @@ export default async function TagPage(props: Params) {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Typography variant="h1">Posts</Typography>
-      <Typography variant="h3"># {tag}</Typography>
-      <Grid container spacing={2}>
-        {posts.map((post) => (
-          <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
-            <PostCard posts={[post]} />
-          </Grid>
-        ))}
-      </Grid>
-      <TagPaginationClient
-        tag={tag}
-        totalPages={totalPages}
-        currentPage={currentPage}
-      />
-    </Box>
+    <main
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}
+    >
+      <header>
+        <h1 style={{ margin: 0 }}>
+          Posts / {tag} - Page {currentPage}
+        </h1>
+        <p style={{ marginTop: 8 }}>This page is under development...</p>
+      </header>
+    </main>
   );
 }
 
