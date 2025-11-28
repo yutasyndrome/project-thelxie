@@ -1,5 +1,5 @@
 import {
-  FOOTER_COPYRIGHT_JP,
+  FOOTER_COPYRIGHT,
   FOOTER_EXTERNAL_LINKS,
   PUBLICATION_YEAR,
   SITE_NAME,
@@ -18,7 +18,7 @@ export default function Footer() {
         <span className="text-[13px] text-gray-500">
           © {yearText} {SITE_NAME}
           <br />
-          {FOOTER_COPYRIGHT_JP}
+          {FOOTER_COPYRIGHT}
           <br />
           Powered by{' '}
           <a
