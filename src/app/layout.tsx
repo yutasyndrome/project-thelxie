@@ -1,6 +1,8 @@
+import AppSidebar from '@/components/feature/app-sidebar';
 import Footer from '@/components/feature/footer';
 import Header from '@/components/feature/header';
 import ThemeProvider from '@/components/feature/theme-provider';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -27,11 +29,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex min-h-screen w-full flex-col pt-(--header-height)">
-            {children}
-            <Footer />
-          </main>
+          <SidebarProvider>
+            <AppSidebar />
+            <Header />
+            <div className="flex min-h-screen w-full flex-col pt-(--header-height)">
+              {children}
+              <Footer />
+            </div>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
