@@ -19,8 +19,6 @@ import { cn } from '@/lib/utils';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '16rem';
-const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 type SidebarContextProps = {
@@ -121,8 +119,6 @@ const SidebarProvider = React.forwardRef<
           <div
             style={
               {
-                '--sidebar-width': SIDEBAR_WIDTH,
-                '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
             }
@@ -161,7 +157,7 @@ const Sidebar = React.forwardRef<
     },
     ref,
   ) => {
-    const { state } = useSidebar();
+    const { state, open, setOpen } = useSidebar();
 
     if (collapsible === 'none') {
       return (
@@ -187,20 +183,18 @@ const Sidebar = React.forwardRef<
         data-variant={variant}
         data-side={side}
       >
-        {/* This is what handles the sidebar gap on desktop */}
+        {open && (
+          <div
+            className="fixed top-(--header-height) right-0 left-0 z-20 bg-black/40"
+            style={{ height: 'calc(100vh - var(--header-height))' }}
+            onClick={() => setOpen(false)}
+            aria-hidden={true}
+          />
+        )}
+
         <div
           className={cn(
-            'relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear',
-            'group-data-[collapsible=offcanvas]:w-0',
-            'group-data-[side=right]:rotate-180',
-            variant === 'floating' || variant === 'inset'
-              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
-              : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon]',
-          )}
-        />
-        <div
-          className={cn(
-            'fixed top-(--header-height) bottom-0 z-10 flex h-auto w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear',
+            'fixed top-(--header-height) bottom-0 z-30 flex h-auto w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear',
             side === 'left'
               ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',

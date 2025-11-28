@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '@/components/ui/sidebar';
 import { APP_VERSION } from '@/lib/constants';
 import {
@@ -59,11 +58,7 @@ const items = [
 ];
 
 export default function AppSidebar() {
-  const { setOpen } = useSidebar();
   const pathname = usePathname();
-  const handleLinkClick = () => {
-    setOpen(false);
-  };
 
   return (
     <>
@@ -76,13 +71,9 @@ export default function AppSidebar() {
                   <SidebarMenuItem key={item.title} className="mb-1 last:mb-0">
                     <SidebarMenuButton
                       asChild
-                      className={`px-5 py-6 text-base ${pathname === item.url ? 'bg-sky-400 font-semibold text-white hover:bg-sky-400 hover:text-white' : ''}`}
+                      className={`px-5 py-6 text-base ${pathname === item.url ? 'bg-sky-400! font-semibold! text-white! hover:bg-sky-400! hover:text-white!' : ''}`}
                     >
-                      <Link
-                        href={item.url}
-                        className="flex items-center gap-4"
-                        onClick={handleLinkClick}
-                      >
+                      <Link href={item.url} className="flex items-center gap-4">
                         <item.icon />
                         <span>{item.title}</span>
                       </Link>
