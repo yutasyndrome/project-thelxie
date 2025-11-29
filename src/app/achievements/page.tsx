@@ -1,4 +1,10 @@
 import Container from '@/components/feature/container';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Achievements',
+  description: 'Achievements page description.',
+};
 
 export default function Achievements() {
   return (

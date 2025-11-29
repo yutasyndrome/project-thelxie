@@ -1,4 +1,10 @@
 import Container from '@/components/feature/container';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Interactive Map',
+  description: 'Interactive Map page description.',
+};
 
 export default function Map() {
   return (

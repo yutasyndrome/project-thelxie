@@ -1,4 +1,10 @@
 import Container from '@/components/feature/container';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Privacy Policy page description.',
+};
 
 export default function Privacy() {
   return (

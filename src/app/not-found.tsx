@@ -1,6 +1,12 @@
 import Container from '@/components/feature/container';
 import { Button } from '@/components/ui/button';
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: '404',
+  description: '申し訳ございませんが、お探しのページは見つかりませんでした。',
+};
 
 export default function NotFound() {
   return (

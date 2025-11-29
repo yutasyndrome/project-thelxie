@@ -1,4 +1,10 @@
 import Container from '@/components/feature/container';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Information',
+  description: 'Information page description.',
+};
 
 export default function Information() {
   return (
