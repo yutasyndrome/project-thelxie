@@ -4,7 +4,6 @@ import Header from '@/components/feature/header';
 import ThemeProvider from '@/components/feature/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import type { Metadata } from 'next';
-import { M_PLUS_1p, Poppins } from 'next/font/google';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,30 +15,13 @@ export const metadata: Metadata = {
     'Project Thelxie is a web application that shares information about exploration in Genshin Impact.',
 };
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '600', '700'],
-  variable: '--font-en',
-  display: 'swap',
-});
-const mplus = M_PLUS_1p({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '700'],
-  variable: '--font-ja',
-  display: 'swap',
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="ja"
-      className={`${poppins.variable} ${mplus.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="ja" suppressHydrationWarning>
       <body>
         <ThemeProvider
           attribute="class"
