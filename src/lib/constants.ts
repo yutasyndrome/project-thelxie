@@ -8,6 +8,13 @@ export const SITE_NAME = 'Project Thelxie';
 export const APPBAR_HEIGHT = 64;
 export const PAGINATION_OFFSET = 4;
 
+/* social links */
+export const SOCIAL_LINKS = {
+  github: 'https://github.com/yutasyndrome/project-thelxie',
+  discord: 'https://discord.gg/h4nNDr78xK',
+  x: 'https://x.com/yutasyndrome_gi/',
+};
+
 /* footer */
 export const PUBLICATION_YEAR = 2025;
 export const FOOTER_COPYRIGHT =

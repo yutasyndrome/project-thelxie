@@ -1,3 +1,4 @@
+import SocialIcons from '@/components/feature/social-icons';
 import {
   FOOTER_COPYRIGHT,
   FOOTER_EXTERNAL_LINKS,
@@ -40,6 +41,7 @@ export default function Footer() {
           </a>
           .
         </span>
+        <SocialIcons />
       </div>
     </footer>
   );
