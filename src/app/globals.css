@@ -125,4 +125,7 @@
   .w-\[--sidebar-width\] {
     width: var(--sidebar-width);
   }
+  .top-\[--header-height\] {
+    top: var(--header-height);
+  }
 }

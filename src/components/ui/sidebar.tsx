@@ -159,21 +159,6 @@ const Sidebar = React.forwardRef<
   ) => {
     const { state, open, setOpen } = useSidebar();
 
-    if (collapsible === 'none') {
-      return (
-        <div
-          className={cn(
-            'bg-sidebar text-sidebar-foreground flex h-full w-[--sidebar-width] flex-col',
-            className,
-          )}
-          ref={ref}
-          {...props}
-        >
-          {children}
-        </div>
-      );
-    }
-
     return (
       <div
         ref={ref}
@@ -183,18 +168,23 @@ const Sidebar = React.forwardRef<
         data-variant={variant}
         data-side={side}
       >
-        {open && (
-          <div
-            className="fixed top-(--header-height) right-0 left-0 z-20 bg-black/40"
-            style={{ height: 'calc(100vh - var(--header-height))' }}
-            onClick={() => setOpen(false)}
-            aria-hidden={true}
-          />
-        )}
+        {/* Overlay: always mounted, animate opacity to match sidebar transition */}
+        <div
+          data-overlay
+          aria-hidden={!open}
+          onClick={() => setOpen(false)}
+          style={{ height: 'calc(100vh - var(--header-height))' }}
+          className={cn(
+            'fixed top-(--header-height) right-0 left-0 z-20 bg-black/40 transition-opacity duration-150 ease-linear',
+            open
+              ? 'pointer-events-auto opacity-100'
+              : 'pointer-events-none opacity-0',
+          )}
+        />
 
         <div
           className={cn(
-            'fixed top-(--header-height) bottom-0 z-30 flex h-auto w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear',
+            'fixed top-[--header-height] bottom-0 z-30 flex h-auto w-[--sidebar-width] transition-[left,right,width] duration-150 ease-linear',
             side === 'left'
               ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -204,7 +194,6 @@ const Sidebar = React.forwardRef<
               : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
             className,
           )}
-          {...props}
         >
           <div
             data-sidebar="sidebar"
