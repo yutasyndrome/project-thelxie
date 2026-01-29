@@ -1,6 +1,3 @@
-import Container from '@/components/feature/container';
-import PostCard from '@/components/feature/post-card';
-import PostPagination from '@/components/feature/post-pagination';
 import { getAllPosts, getTotalPages } from '@/lib/api';
 import { PAGINATION_OFFSET } from '@/lib/constants';
 import { notFound } from 'next/navigation';
@@ -18,7 +15,7 @@ export default async function Page(props: Params) {
   const totalPages = getTotalPages();
   const posts = allPosts.slice(
     (currentPage - 1) * PAGINATION_OFFSET,
-    currentPage * PAGINATION_OFFSET,
+    currentPage * PAGINATION_OFFSET
   );
 
   if (!posts || posts.length === 0) {
@@ -26,15 +23,14 @@ export default async function Page(props: Params) {
   }
 
   return (
-    <Container>
-      <h1 className="mt-10 text-center text-4xl font-bold">Posts</h1>
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => (
-          <PostCard key={post.slug} {...post} />
-        ))}
-      </div>
-      <PostPagination currentPage={currentPage} totalPages={totalPages} />
-    </Container>
+    <main
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}
+    >
+      <header>
+        <h1 style={{ margin: 0 }}>Posts - Page {currentPage}</h1>
+        <p style={{ marginTop: 8 }}>This page is under development...</p>
+      </header>
+    </main>
   );
 }
 

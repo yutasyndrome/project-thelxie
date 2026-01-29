@@ -1,6 +1,3 @@
-import Container from '@/components/feature/container';
-import PostCard from '@/components/feature/post-card';
-import TagPagination from '@/components/feature/tag-pagination';
 import { getAllPosts } from '@/lib/api';
 import { PAGINATION_OFFSET } from '@/lib/constants';
 import { notFound } from 'next/navigation';
@@ -20,7 +17,7 @@ export default async function TagPage(props: Params) {
   const totalPages = Math.ceil(allPosts.length / PAGINATION_OFFSET);
   const posts = allPosts.slice(
     (currentPage - 1) * PAGINATION_OFFSET,
-    currentPage * PAGINATION_OFFSET,
+    currentPage * PAGINATION_OFFSET
   );
 
   if (!posts || posts.length === 0) {
@@ -28,20 +25,15 @@ export default async function TagPage(props: Params) {
   }
 
   return (
-    <main className="flex-1">
-      <Container>
-        <h1 className="mt-10 text-center text-4xl font-bold">#{tag}</h1>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <PostCard key={post.slug} {...post} />
-          ))}
-        </div>
-        <TagPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          tag={tag}
-        />
-      </Container>
+    <main
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}
+    >
+      <header>
+        <h1 style={{ margin: 0 }}>
+          Posts / {tag} - Page {currentPage}
+        </h1>
+        <p style={{ marginTop: 8 }}>This page is under development...</p>
+      </header>
     </main>
   );
 }

@@ -14,7 +14,7 @@ export default function Footer() {
       : `${PUBLICATION_YEAR}-${currentYear}`;
 
   return (
-    <footer className="border-border w-full border-t">
+    <footer className="w-full border-t border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-black">
       <div className="mx-auto flex flex-col items-center justify-center gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-[13px] text-gray-500">
           © {yearText} {SITE_NAME}

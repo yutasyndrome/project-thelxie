@@ -1,6 +1,3 @@
-import Container from '@/components/feature/container';
-import PostHeader from '@/components/feature/post-header';
-import PostToc from '@/components/feature/post-toc';
 import { getAllPosts, getPostBySlug } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
 import { Metadata } from 'next';
@@ -20,23 +17,17 @@ export default async function Post(props: Params) {
     return notFound();
   }
 
-  const content = await markdownToHtml(post.content || '');
+  const { html, tocItems } = await markdownToHtml(post.content || '');
 
   return (
-    <Container>
-      <div className="mx-auto max-w-7xl">
-        <PostHeader {...post} />
-        <div className="flex flex-row gap-5 pt-5">
-          <main
-            className="markdown min-w-0 flex-1"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-          <aside className="hidden w-64 lg:block">
-            <PostToc content={post.content} />
-          </aside>
-        </div>
-      </div>
-    </Container>
+    <main
+      style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}
+    >
+      <header>
+        <h1 style={{ margin: 0 }}>Post</h1>
+        <p style={{ marginTop: 8 }}>This page is under development...</p>
+      </header>
+    </main>
   );
 }
 
@@ -48,10 +39,12 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     return notFound();
   }
 
+  const title = post.title.replace(/#/g, '＃');
+
   return {
-    title: post.title,
+    title,
     openGraph: {
-      title: post.title,
+      title,
       images: [post.ogImage.url],
     },
   };

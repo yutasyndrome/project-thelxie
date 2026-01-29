@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="border-border fixed top-0 left-0 z-50 h-(--header-height) w-full border-b bg-white/50 backdrop-blur dark:bg-black/50">
+    <header className="fixed top-0 left-0 z-50 h-(--header-height) w-full border-b border-gray-200 bg-white/50 backdrop-blur dark:border-gray-700 dark:bg-black/50">
       <div className="mx-auto flex h-full items-center justify-between px-4">
         <div className="flex items-center">
           <SidebarTrigger />
