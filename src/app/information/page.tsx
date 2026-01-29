@@ -3,15 +3,15 @@ import Typography from '@mui/material/Typography';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Interactive Map',
+  title: 'Information',
 };
 
-export default function InteractiveMap() {
+export default function Information() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <div>
         <Typography variant="h1" gutterBottom>
-          Interactive Map
+          Information
         </Typography>
         <Typography>This page is under development...</Typography>
       </div>

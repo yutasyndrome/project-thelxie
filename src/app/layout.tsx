@@ -1,25 +1,11 @@
-import AppSidebar from '@/components/feature/app-sidebar';
-import Footer from '@/components/feature/footer';
-import Header from '@/components/feature/header';
-import ThemeProvider from '@/components/feature/theme-provider';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
+import ThemeClientProvider from '@/components/theme-client-provider';
+import { APPBAR_HEIGHT } from '@/lib/constants';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import type { Metadata } from 'next';
-import { M_PLUS_1p, Poppins } from 'next/font/google';
 import './globals.css';
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '600', '700'],
-  variable: '--font-en',
-  display: 'swap',
-});
-
-const mplus = M_PLUS_1p({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '700'],
-  variable: '--font-ja',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -36,23 +22,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={`${poppins.variable} ${mplus.variable}`}suppressHydrationWarning>
+    <html lang="ja">
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider>
-            <AppSidebar />
+        <ThemeClientProvider>
+          <Container
+            maxWidth="lg"
+            component="main"
+            sx={{
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
             <Header />
-            <div className="flex min-h-screen w-full flex-col pt-(--header-height)">
+            <Box sx={{ marginTop: `${APPBAR_HEIGHT}px`, flex: 1 }}>
               {children}
-              <Footer />
-            </div>
-          </SidebarProvider>
-        </ThemeProvider>
+            </Box>
+            <Footer />
+          </Container>
+        </ThemeClientProvider>
       </body>
     </html>
   );

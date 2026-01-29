@@ -1,17 +1,20 @@
-import Container from '@/components/feature/container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description: 'Privacy Policy page description.',
+  title: 'Privacy',
 };
 
 export default function Privacy() {
   return (
-    <main className="flex-1">
-      <Container>
-        <h1 className="mt-10 text-center text-4xl font-bold">Privacy Policy</h1>
-      </Container>
-    </main>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <div>
+        <Typography variant="h1" gutterBottom>
+          Privacy
+        </Typography>
+        <Typography>This page is under development...</Typography>
+      </div>
+    </Box>
   );
 }
