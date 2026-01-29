@@ -1,10 +1,8 @@
-import { PostCard } from '@/components/post-card';
-import TagPaginationClient from '@/components/tag-pagination';
+import Container from '@/components/feature/container';
+import PostCard from '@/components/feature/post-card';
+import TagPagination from '@/components/feature/tag-pagination';
 import { getAllPosts } from '@/lib/api';
 import { PAGINATION_OFFSET } from '@/lib/constants';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { notFound } from 'next/navigation';
 
 type Params = {
@@ -22,7 +20,7 @@ export default async function TagPage(props: Params) {
   const totalPages = Math.ceil(allPosts.length / PAGINATION_OFFSET);
   const posts = allPosts.slice(
     (currentPage - 1) * PAGINATION_OFFSET,
-    currentPage * PAGINATION_OFFSET
+    currentPage * PAGINATION_OFFSET,
   );
 
   if (!posts || posts.length === 0) {
@@ -30,22 +28,21 @@ export default async function TagPage(props: Params) {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Typography variant="h1">Posts</Typography>
-      <Typography variant="h3"># {tag}</Typography>
-      <Grid container spacing={2}>
-        {posts.map((post) => (
-          <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
-            <PostCard posts={[post]} />
-          </Grid>
-        ))}
-      </Grid>
-      <TagPaginationClient
-        tag={tag}
-        totalPages={totalPages}
-        currentPage={currentPage}
-      />
-    </Box>
+    <main className="flex-1">
+      <Container>
+        <h1 className="mt-10 text-center text-4xl font-bold">#{tag}</h1>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard key={post.slug} {...post} />
+          ))}
+        </div>
+        <TagPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          tag={tag}
+        />
+      </Container>
+    </main>
   );
 }
 

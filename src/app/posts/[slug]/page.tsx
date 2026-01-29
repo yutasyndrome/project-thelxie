@@ -1,13 +1,8 @@
-import ClickableChip from '@/components/clickable-chip';
-import PostMeta from '@/components/post-meta';
-import Toc from '@/components/post-toc';
-import TocFab from '@/components/toc-fab';
+import Container from '@/components/feature/container';
+import PostHeader from '@/components/feature/post-header';
+import PostToc from '@/components/feature/post-toc';
 import { getAllPosts, getPostBySlug } from '@/lib/api';
-import { BORDER_RADIUS } from '@/lib/constants';
 import markdownToHtml from '@/lib/markdownToHtml';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -25,79 +20,23 @@ export default async function Post(props: Params) {
     return notFound();
   }
 
-  const { html, tocItems } = await markdownToHtml(post.content || '');
+  const content = await markdownToHtml(post.content || '');
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: 4,
-        alignItems: 'flex-start',
-      }}
-    >
-      <Box
-        sx={{
-          flex: 1,
-          minWidth: 0,
-          backgroundColor: { sm: 'background.paper' },
-          borderRadius: `${BORDER_RADIUS}px`,
-          p: { xs: 0, sm: 4 },
-        }}
-      >
-        <Typography variant="h3" sx={{ mb: 2 }}>
-          {post.title}
-        </Typography>
-        <Stack
-          direction="row"
-          useFlexGap
-          spacing={2}
-          sx={{ mb: 1, flexWrap: 'wrap', rowGap: 1 }}
-        >
-          {post.tags.map((tag) => (
-            <ClickableChip tag={tag} key={tag} />
-          ))}
-        </Stack>
-        <Box sx={{ mt: 2, mb: 6 }}>
-          <PostMeta
-            author={{
-              name: post.author.name,
-              avatar: post.author.url,
-            }}
-            date={post.date}
-            update={post.update ?? ''}
+    <Container>
+      <div className="mx-auto max-w-7xl">
+        <PostHeader {...post} />
+        <div className="flex flex-row gap-5 pt-5">
+          <main
+            className="markdown min-w-0 flex-1"
+            dangerouslySetInnerHTML={{ __html: content }}
           />
-        </Box>
-        <div className="post" dangerouslySetInnerHTML={{ __html: html }} />
-      </Box>
-      {tocItems.length > 0 && (
-        <Box
-          sx={{
-            width: 260,
-            flexShrink: 0,
-            display: { xs: 'none', sm: 'block' },
-            position: 'sticky',
-            top: 96,
-            maxHeight: 'calc(100vh - 96px)',
-            overflowY: 'auto',
-          }}
-        >
-          <Toc tocItems={tocItems} />
-        </Box>
-      )}
-      {tocItems.length > 0 && (
-        <Box
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            position: 'fixed',
-            right: 20,
-            bottom: 20,
-            zIndex: 1200,
-          }}
-        >
-          <TocFab tocItems={tocItems} />
-        </Box>
-      )}
-    </Box>
+          <aside className="hidden w-64 lg:block">
+            <PostToc content={post.content} />
+          </aside>
+        </div>
+      </div>
+    </Container>
   );
 }
 
@@ -109,12 +48,10 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     return notFound();
   }
 
-  const title = post.title.replace(/#/g, '＃');
-
   return {
-    title,
+    title: post.title,
     openGraph: {
-      title,
+      title: post.title,
       images: [post.ogImage.url],
     },
   };
