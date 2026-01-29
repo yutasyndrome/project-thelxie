@@ -23,7 +23,6 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-/* Menu items */
 const items = [
   {
     title: 'Home',
@@ -32,7 +31,7 @@ const items = [
   },
   {
     title: 'Posts',
-    url: '/posts',
+    url: '/posts/page/1',
     icon: Newspaper,
   },
   {
@@ -67,19 +66,32 @@ export default function AppSidebar() {
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title} className="mb-1 last:mb-0">
-                    <SidebarMenuButton
-                      asChild
-                      className={`px-5 py-6 text-base ${pathname === item.url ? 'bg-sky-400! font-semibold! text-white! hover:bg-sky-400! hover:text-white!' : ''}`}
+                {items.map((item) => {
+                  const isPostsMenu = item.url.startsWith('/posts');
+                  const active =
+                    pathname === item.url ||
+                    (isPostsMenu && pathname?.startsWith('/posts'));
+
+                  return (
+                    <SidebarMenuItem
+                      key={item.title}
+                      className="mb-1 last:mb-0"
                     >
-                      <Link href={item.url} className="flex items-center gap-4">
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                      <SidebarMenuButton
+                        asChild
+                        className={`px-5 py-6 text-base ${active ? 'bg-azur-500! hover:bg-azur-500! font-semibold! text-white! hover:text-white!' : ''}`}
+                      >
+                        <Link
+                          href={item.url}
+                          className="flex items-center gap-4"
+                        >
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
