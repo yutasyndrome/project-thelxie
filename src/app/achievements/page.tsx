@@ -1,20 +1,17 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Container from '@/components/feature/container';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Achievements',
+  description: 'Achievements page description.',
 };
 
 export default function Achievements() {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <div>
-        <Typography variant="h1" gutterBottom>
-          Achievements
-        </Typography>
-        <Typography>This page is under development...</Typography>
-      </div>
-    </Box>
+    <main className="flex-1">
+      <Container>
+        <h1 className="mt-10 text-center text-4xl font-bold">Achievements</h1>
+      </Container>
+    </main>
   );
 }
