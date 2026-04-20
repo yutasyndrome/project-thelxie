@@ -14,7 +14,7 @@ export default function SocialIcons() {
           <TooltipTrigger asChild>
             <FaGithub className="hover:text-primary/80 h-5 w-5 text-gray-500" />
           </TooltipTrigger>
-          <TooltipContent>GitHubリポジトリ</TooltipContent>
+          <TooltipContent>GitHub リポジトリ</TooltipContent>
         </Tooltip>
       </a>
       <a href={SOCIAL_LINKS.discord} target="_blank" rel="noopener noreferrer">
@@ -22,7 +22,7 @@ export default function SocialIcons() {
           <TooltipTrigger asChild>
             <FaDiscord className="hover:text-primary/80 h-5 w-5 text-gray-500" />
           </TooltipTrigger>
-          <TooltipContent>Discordコミュニティサーバー</TooltipContent>
+          <TooltipContent>Discord コミュニティサーバー</TooltipContent>
         </Tooltip>
       </a>
       <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer">
@@ -30,7 +30,7 @@ export default function SocialIcons() {
           <TooltipTrigger asChild>
             <FaXTwitter className="hover:text-primary/80 h-5 w-5 text-gray-500" />
           </TooltipTrigger>
-          <TooltipContent>開発者 (@yutasyndrome) Xアカウント</TooltipContent>
+          <TooltipContent>公式 X アカウント</TooltipContent>
         </Tooltip>
       </a>
     </div>

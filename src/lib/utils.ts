@@ -40,3 +40,11 @@ export function getCssVarPx(varName: string, fallbackPx = 0): number {
   const value = Number.parseFloat(raw);
   return Number.isFinite(value) ? value : fallbackPx;
 }
+
+export function normalizeTagPathSegment(tag: string): string {
+  return tag.toLowerCase();
+}
+
+export function isTagPathSegment(tag: string, pathSegment: string): boolean {
+  return normalizeTagPathSegment(tag) === normalizeTagPathSegment(pathSegment);
+}

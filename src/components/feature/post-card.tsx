@@ -10,7 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { excerptFromMarkdown, firstChars } from '@/lib/utils';
+import {
+  excerptFromMarkdown,
+  firstChars,
+  normalizeTagPathSegment,
+} from '@/lib/utils';
 import { PostType } from '@/types/post';
 import { Pin } from 'lucide-react';
 import Link from 'next/link';
@@ -39,7 +43,7 @@ export default function PostCard({
 
   return (
     <Card
-      className="hover:bg-muted/50 hover:ring-azur-500 w-auto cursor-pointer pt-0 hover:ring-1"
+      className="hover:bg-muted/30 hover:ring-azur-500 w-auto cursor-pointer pt-0 hover:ring-1"
       onClick={handleActivate}
     >
       <CardContent className="px-0">
@@ -62,13 +66,13 @@ export default function PostCard({
           {tags.map((tag) => (
             <Link
               key={tag}
-              href={`/posts/tag/${encodeURIComponent(tag)}/page/1`}
+              href={`/posts/tag/${encodeURIComponent(normalizeTagPathSegment(tag))}/page/1`}
               onClick={(e) => e.stopPropagation()}
               className="inline-block"
             >
               <Badge
                 variant="outline"
-                className="hover:bg-accent h-7 cursor-pointer text-xs font-medium"
+                className="hover:bg-accent h-7 cursor-pointer gap-1 text-xs font-medium"
               >
                 <RiHashtag />
                 {tag}

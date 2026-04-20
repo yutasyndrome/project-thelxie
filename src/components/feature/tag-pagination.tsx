@@ -4,6 +4,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from '@/components/ui/pagination';
+import { normalizeTagPathSegment } from '@/lib/utils';
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -22,6 +23,7 @@ export default function PostPagination({
 }) {
   const isFirst = currentPage <= 1;
   const isLast = currentPage >= totalPages;
+  const tagPath = encodeURIComponent(normalizeTagPathSegment(tag));
 
   return (
     <Pagination className="py-6">
@@ -32,7 +34,7 @@ export default function PostPagination({
               <ChevronFirstIcon className="size-5" />
             </PaginationLink>
           ) : (
-            <PaginationLink href={`/posts/tag/${tag}/page/1`} size="icon">
+            <PaginationLink href={`/posts/tag/${tagPath}/page/1`} size="icon">
               <ChevronFirstIcon className="size-5" />
             </PaginationLink>
           )}
@@ -44,7 +46,7 @@ export default function PostPagination({
             </PaginationLink>
           ) : (
             <PaginationLink
-              href={`/posts/tag/${tag}/page/${Math.max(1, currentPage - 1)}`}
+              href={`/posts/tag/${tagPath}/page/${Math.max(1, currentPage - 1)}`}
               size="icon"
             >
               <ChevronLeftIcon className="size-5" />
@@ -67,7 +69,7 @@ export default function PostPagination({
             </PaginationLink>
           ) : (
             <PaginationLink
-              href={`/posts/tag/${tag}/page/${Math.min(totalPages, currentPage + 1)}`}
+              href={`/posts/tag/${tagPath}/page/${Math.min(totalPages, currentPage + 1)}`}
               size="icon"
             >
               <ChevronRightIcon className="size-5" />
@@ -81,7 +83,7 @@ export default function PostPagination({
             </PaginationLink>
           ) : (
             <PaginationLink
-              href={`/posts/tag/${tag}/page/${totalPages}`}
+              href={`/posts/tag/${tagPath}/page/${totalPages}`}
               size="icon"
             >
               <ChevronLastIcon className="size-5" />

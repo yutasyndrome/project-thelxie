@@ -8,11 +8,19 @@ export const SITE_NAME = 'Project Thelxie';
 export const APPBAR_HEIGHT = 64;
 export const PAGINATION_OFFSET = 3;
 
+/* author links */
+export const AUTHOR_LINKS = {
+  yutasyndrome: {
+    github: 'https://github.com/yutasyndrome',
+    x: 'https://x.com/yutasyndrome_gi',
+  },
+};
+
 /* social links */
 export const SOCIAL_LINKS = {
   github: 'https://github.com/yutasyndrome/project-thelxie',
   discord: 'https://discord.gg/h4nNDr78xK',
-  x: 'https://x.com/yutasyndrome_gi',
+  x: 'https://x.com/project_thelxie',
 };
 
 /* footer */

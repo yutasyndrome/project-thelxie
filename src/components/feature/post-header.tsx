@@ -1,8 +1,7 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { firstChars } from '@/lib/utils';
+import { normalizeTagPathSegment } from '@/lib/utils';
 import { PostType } from '@/types/post';
 import Link from 'next/link';
 import { MdOutlineCalendarToday, MdOutlineEditCalendar } from 'react-icons/md';
@@ -13,18 +12,21 @@ export default function PostHeader({
   date,
   update = '',
   coverImage = '',
-  author = { name: '', url: '' },
   tags = [],
 }: PostType) {
   return (
-    <div className="flex flex-col gap-5">
-      <img src={coverImage} alt={`${title}_cover`} />
+    <div className="flex flex-col gap-5 rounded-2xl">
+      <img
+        src={coverImage}
+        alt={`${title}_cover`}
+        className="h-auto max-w-4xl object-contain"
+      />
       <h1 className="text-2xl font-bold">{title}</h1>
       <div className="flex items-center gap-2">
         {tags.map((tag) => (
           <Link
             key={tag}
-            href={`/posts/tag/${encodeURIComponent(tag)}/page/1`}
+            href={`/posts/tag/${encodeURIComponent(normalizeTagPathSegment(tag))}/page/1`}
             className="inline-block"
           >
             <Badge
@@ -38,13 +40,6 @@ export default function PostHeader({
         ))}
       </div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Avatar className="size-7">
-            <AvatarImage src={author.url} alt={author.name} />
-            <AvatarFallback>{firstChars(author.name, 2)}</AvatarFallback>
-          </Avatar>
-          <span className="text-muted-foreground text-xs">{author.name}</span>
-        </div>
         <div className="flex items-center justify-center gap-2">
           {update ? (
             <div className="flex items-center gap-4">
