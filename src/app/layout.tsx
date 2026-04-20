@@ -3,6 +3,7 @@ import Footer from '@/components/feature/footer';
 import Header from '@/components/feature/header';
 import ThemeProvider from '@/components/feature/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import { M_PLUS_1p, Poppins } from 'next/font/google';
 import './globals.css';
@@ -36,7 +37,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={`${poppins.variable} ${mplus.variable}`}suppressHydrationWarning>
+    <html
+      lang="ja"
+      className={`${poppins.variable} ${mplus.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider
           attribute="class"
@@ -51,6 +56,7 @@ export default function RootLayout({
               {children}
               <Footer />
             </div>
+            <Toaster position="top-right" />
           </SidebarProvider>
         </ThemeProvider>
       </body>

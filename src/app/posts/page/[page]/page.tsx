@@ -15,6 +15,7 @@ export default async function Page(props: Params) {
   const params = await props.params;
   const currentPage = Number(params.page) || 1;
   const allPosts = getAllPosts();
+  const totalArticles = allPosts.length;
   const totalPages = getTotalPages();
   const posts = allPosts.slice(
     (currentPage - 1) * PAGINATION_OFFSET,
@@ -27,7 +28,12 @@ export default async function Page(props: Params) {
 
   return (
     <Container>
-      <h1 className="mt-10 text-center text-4xl font-bold">Posts</h1>
+      <div className="mt-10 flex items-baseline justify-center gap-5 text-center">
+        <h1 className="text-4xl font-bold">All Posts</h1>
+        <span className="text-muted-foreground text-base font-normal">
+          {totalArticles} {totalArticles === 1 ? 'article' : 'articles'}
+        </span>
+      </div>
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <PostCard key={post.slug} {...post} />
@@ -47,7 +53,7 @@ export async function generateMetadata(props: Params) {
     title,
     openGraph: {
       title,
-      images: ['/assets/posts/cover.jpg'],
+      images: ['/assets/posts/cover.webp'],
     },
   };
 }

@@ -6,7 +6,11 @@ import { resolve } from 'path';
 
 const postsDirectory = resolve(process.cwd(), '_posts');
 
-export const getPostSlugs = () => fs.readdirSync(postsDirectory);
+export const getPostSlugs = () =>
+  fs.readdirSync(postsDirectory).filter((entry) => {
+    const full = resolve(postsDirectory, entry);
+    return fs.statSync(full).isDirectory();
+  });
 
 export const getTotalPages = () => {
   const postNum = getPostSlugs().length;
@@ -14,19 +18,26 @@ export const getTotalPages = () => {
 };
 
 export const getPostBySlug = (slug: string) => {
-  const realSlug = slug.replace(/\.md$/, '');
-  const fullPath = resolve(postsDirectory, `${realSlug}.md`);
+  const fullPath = resolve(postsDirectory, slug, 'index.md');
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  return { ...data, slug: realSlug, content } as PostType;
+  return { ...data, slug, content } as PostType;
+};
+
+export const getRawMarkdownBySlug = (slug: string): string => {
+  const fullPath = resolve(postsDirectory, slug, 'index.md');
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { content } = matter(fileContents);
+
+  return content.replace(/^(?:\r?\n)+/, '');
 };
 
 export const getAllPosts = (): PostType[] => {
   const slugs = getPostSlugs();
   const posts = slugs.map((slug) => getPostBySlug(slug));
   const fixCount = posts.filter((post) => post.fix).length;
-  
+
   if (fixCount > 1) {
     throw new Error('Multiple posts with fix: true found');
   }
