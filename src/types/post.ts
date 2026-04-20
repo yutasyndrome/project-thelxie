@@ -1,7 +1,6 @@
 export type PostType = {
   slug: string;
   title: string;
-  excerpt: string;
   coverImage: string;
   date: string;
   update?: string;
@@ -12,6 +11,7 @@ export type PostType = {
   ogImage: {
     url: string;
   };
-  content: string;
   tags: string[];
+  fix?: boolean;
+  content: string;
 };

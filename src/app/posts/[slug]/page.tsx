@@ -1,10 +1,10 @@
-import ClickableChip from '@/components/clickable-chip';
-import PostMeta from '@/components/post-meta';
-import { getAllPosts, getPostBySlug } from '@/lib/api';
+import Container from '@/components/feature/container';
+import PostActions from '@/components/feature/post-actions';
+import PostAuthor from '@/components/feature/post-author';
+import PostHeader from '@/components/feature/post-header';
+import PostToc from '@/components/feature/post-toc';
+import { getAllPosts, getPostBySlug, getRawMarkdownBySlug } from '@/lib/api';
 import markdownToHtml from '@/lib/markdownToHtml';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -23,34 +23,44 @@ export default async function Post(props: Params) {
   }
 
   const content = await markdownToHtml(post.content || '');
+  const rawMarkdown = getRawMarkdownBySlug(params.slug);
+  const githubHistoryUrl = `https://github.com/yutasyndrome/project-thelxie-contents/commits/main/_posts/${encodeURIComponent(params.slug)}/index.md`;
 
   return (
-    <>
-      <Typography variant="h3" sx={{ mb: 2 }}>
-        {post.title}
-      </Typography>
-      <Stack
-        direction="row"
-        useFlexGap
-        spacing={2}
-        sx={{ mb: 1, flexWrap: 'wrap', rowGap: 1 }}
-      >
-        {post.tags.map((tag) => (
-          <ClickableChip tag={tag} key={tag} />
-        ))}
-      </Stack>
-      <Box sx={{ mt: 2, mb: 6 }}>
-        <PostMeta
-          author={{
-            name: post.author.name,
-            avatar: post.author.url,
-          }}
-          date={post.date}
-          update={post.update ?? ''}
-        />
-      </Box>
-      <div className="post" dangerouslySetInnerHTML={{ __html: content }} />
-    </>
+    <Container>
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row">
+        {/* 左カラム: PostHeader + Content */}
+        <div className="w-full min-w-0 p-2 md:rounded-lg md:border md:p-5 lg:max-w-4xl lg:flex-1 lg:p-10">
+          <PostHeader {...post} />
+          {/* モバイル: Author + Actions */}
+          <div className="mt-3 flex flex-col gap-4 lg:hidden">
+            <PostAuthor author={post.author} variant="compact" />
+            <PostActions
+              rawMarkdown={rawMarkdown}
+              githubHistoryUrl={githubHistoryUrl}
+              variant="compact"
+            />
+          </div>
+          <main
+            className="markdown mt-3 min-w-0"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+        {/* 右カラム: aside（lg以上で表示） */}
+        <aside className="hidden w-64 gap-8 lg:flex lg:flex-col">
+          <PostAuthor author={post.author} />
+          <PostActions
+            rawMarkdown={rawMarkdown}
+            githubHistoryUrl={githubHistoryUrl}
+          />
+          <PostToc content={post.content} />
+        </aside>
+      </div>
+      {/* モバイル: フローティング目次ボタン */}
+      <div className="lg:hidden">
+        <PostToc content={post.content} variant="floating" />
+      </div>
+    </Container>
   );
 }
 
@@ -62,12 +72,10 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     return notFound();
   }
 
-  const title = post.title.replace(/#/g, '＃');
-
   return {
-    title,
+    title: post.title,
     openGraph: {
-      title,
+      title: post.title,
       images: [post.ogImage.url],
     },
   };
