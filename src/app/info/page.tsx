@@ -17,7 +17,7 @@ export default async function Information() {
   const content = await markdownToHtml(page.content || '');
   const rawMarkdown = getPageRawMarkdownBySlug('info');
   const githubHistoryUrl =
-    'https://github.com/yutasyndrome/project-thelxie-contents/commits/main/_pages/info/index.md';
+    'https://github.com/yutasyndrome/project-thelxie-contents/commits/main/_pages/info';
 
   return (
     <Container>

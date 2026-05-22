@@ -24,7 +24,7 @@ export default async function Post(props: Params) {
 
   const content = await markdownToHtml(post.content || '');
   const rawMarkdown = getRawMarkdownBySlug(params.slug);
-  const githubHistoryUrl = `https://github.com/yutasyndrome/project-thelxie-contents/commits/main/_posts/${encodeURIComponent(params.slug)}/index.md`;
+  const githubHistoryUrl = `https://github.com/yutasyndrome/project-thelxie-contents/commits/main/_posts/${encodeURIComponent(params.slug)}`;
 
   return (
     <Container>
