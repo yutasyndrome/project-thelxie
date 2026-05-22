@@ -1,15 +1,20 @@
 {
   "name": "project-thelxie",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "sync-assets": "node scripts/sync-post-assets.mjs",
-    "predev": "npm run sync-assets",
+    "generate-content": "node scripts/generate-content.mjs",
+    "predev": "npm run sync-assets && npm run generate-content",
     "dev": "next dev",
-    "prebuild": "npm run sync-assets",
+    "prebuild": "npm run sync-assets && npm run generate-content",
     "build": "next build",
     "start": "npx serve@latest out",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preview": "OPENNEXT=1 opennextjs-cloudflare build && OPENNEXT=1 opennextjs-cloudflare preview",
+    "deploy": "OPENNEXT=1 opennextjs-cloudflare build && OPENNEXT=1 opennextjs-cloudflare deploy",
+    "upload": "OPENNEXT=1 opennextjs-cloudflare build && OPENNEXT=1 opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
@@ -23,7 +28,7 @@
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.7.0",
-    "next": "^15.4.0",
+    "next": "15.5.15",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -42,6 +47,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.19.2",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -49,13 +55,15 @@
     "autoprefixer": "^10.4.22",
     "baseline-browser-mapping": "^2.10.13",
     "eslint": "^9",
-    "eslint-config-next": "^15.5.0",
+    "eslint-config-next": "15.5.15",
+    "esbuild": "0.27.3",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.17",
     "textlint": "^15.5.4",
     "textlint-rule-preset-ja-spacing": "^2.4.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.83.0"
   }
 }

@@ -1,8 +1,4 @@
-import fs from 'fs';
-import matter from 'gray-matter';
-import { resolve } from 'path';
-
-const pagesDirectory = resolve(process.cwd(), '_pages');
+import { generatedPages } from '@/generated/content';
 
 type PageData = {
   title?: string;
@@ -11,22 +7,19 @@ type PageData = {
   update?: string;
 };
 
-export const getPageBySlug = (slug: string) => {
-  const fullPath = resolve(pagesDirectory, slug, 'index.md');
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
+type GeneratedPage = {
+  slug: string;
+  content: string;
+  rawMarkdown: string;
+  data: PageData;
+};
 
-  return {
-    slug,
-    content,
-    data: data as PageData,
-  };
+const pages = generatedPages as Record<string, GeneratedPage>;
+
+export const getPageBySlug = (slug: string) => {
+  return pages[slug];
 };
 
 export const getPageRawMarkdownBySlug = (slug: string): string => {
-  const fullPath = resolve(pagesDirectory, slug, 'index.md');
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { content } = matter(fileContents);
-
-  return content.replace(/^(?:\r?\n)+/, '');
+  return pages[slug]?.rawMarkdown ?? '';
 };

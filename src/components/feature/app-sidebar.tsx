@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { APP_VERSION } from '@/lib/constants';
+import { APP_VERSION, SOCIAL_LINKS } from '@/lib/constants';
 import {
   Home,
   Info,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { MdUpdate } from 'react-icons/md';
 
 const items = [
   {
@@ -96,9 +97,35 @@ export default function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroupContent>
-            <div className="flex items-center justify-center">
-              <Button variant="outline" size="sm">
-                <Tag className="mr-0.5 text-green-400" /> {`v${APP_VERSION}`}
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="h-7 gap-2 text-sm font-medium"
+              >
+                <a
+                  href={`${SOCIAL_LINKS.github}/releases/tag/v${APP_VERSION}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Tag className="h-4 w-4" /> {`v${APP_VERSION}`}
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="h-7 gap-2 text-sm font-medium"
+              >
+                <a
+                  href={`${SOCIAL_LINKS.github}/blob/main/CHANGELOG.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MdUpdate className="h-4 w-4" />
+                  changelog
+                </a>
               </Button>
             </div>
           </SidebarGroupContent>

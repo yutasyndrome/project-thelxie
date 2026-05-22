@@ -1,16 +1,20 @@
+import { generatedPosts } from '@/generated/content';
 import { PAGINATION_OFFSET } from '@/lib/constants';
 import { PostType } from '@/types/post';
-import fs from 'fs';
-import matter from 'gray-matter';
-import { resolve } from 'path';
 
-const postsDirectory = resolve(process.cwd(), '_posts');
+type GeneratedPost = PostType & {
+  rawMarkdown: string;
+};
 
-export const getPostSlugs = () =>
-  fs.readdirSync(postsDirectory).filter((entry) => {
-    const full = resolve(postsDirectory, entry);
-    return fs.statSync(full).isDirectory();
-  });
+const posts = generatedPosts as GeneratedPost[];
+
+const toPost = (generatedPost: GeneratedPost): PostType => {
+  const { rawMarkdown, ...post } = generatedPost;
+  void rawMarkdown;
+  return post;
+};
+
+export const getPostSlugs = () => posts.map((post) => post.slug);
 
 export const getTotalPages = () => {
   const postNum = getPostSlugs().length;
@@ -18,35 +22,26 @@ export const getTotalPages = () => {
 };
 
 export const getPostBySlug = (slug: string) => {
-  const fullPath = resolve(postsDirectory, slug, 'index.md');
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return { ...data, slug, content } as PostType;
+  return posts.find((post) => post.slug === slug);
 };
 
 export const getRawMarkdownBySlug = (slug: string): string => {
-  const fullPath = resolve(postsDirectory, slug, 'index.md');
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { content } = matter(fileContents);
-
-  return content.replace(/^(?:\r?\n)+/, '');
+  return posts.find((post) => post.slug === slug)?.rawMarkdown ?? '';
 };
 
 export const getAllPosts = (): PostType[] => {
-  const slugs = getPostSlugs();
-  const posts = slugs.map((slug) => getPostBySlug(slug));
-  const fixCount = posts.filter((post) => post.fix).length;
+  const allPosts = posts.map(toPost);
+  const fixCount = allPosts.filter((post) => post.fix).length;
 
   if (fixCount > 1) {
     throw new Error('Multiple posts with fix: true found');
   }
 
-  posts.sort((post1, post2) => {
+  allPosts.sort((post1, post2) => {
     if (post1.fix && !post2.fix) return -1;
     if (!post1.fix && post2.fix) return 1;
     return post1.date > post2.date ? -1 : 1;
   });
 
-  return posts;
+  return allPosts;
 };
