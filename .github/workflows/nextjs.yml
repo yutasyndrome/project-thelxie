@@ -1,93 +1,170 @@
-# Sample workflow for building and deploying a Next.js site to GitHub Pages
-#
-# To get started with Next.js see: https://nextjs.org/docs/getting-started
-#
-name: Deploy Next.js site to Pages
+name: Deploy to Cloudflare
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  deployments: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: cloudflare-production
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
-      - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
+          cache: npm
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read worker name
+        id: worker
+        run: |
+          worker_name=$(node -e "const fs = require('node:fs'); const match = fs.readFileSync('wrangler.jsonc', 'utf8').match(/\"name\"\s*:\s*\"([^\"]+)\"/); if (!match) { process.exit(1); } process.stdout.write(match[1]);")
+          echo "name=$worker_name" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub deployment
+        id: create_deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: "production",
+              description: "Deploy to Cloudflare",
+              auto_merge: false,
+              production_environment: true,
+              transient_environment: false,
+              required_contexts: []
+            });
+
+            core.setOutput("deployment_id", String(deployment.data.id));
+
+      - name: Mark deployment in progress
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: Number("${{ steps.create_deployment.outputs.deployment_id }}"),
+              state: "in_progress",
+              environment: "production",
+              log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
+
+      - name: Deploy to Cloudflare
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npm run deploy
+
+      - name: Resolve deployment URL
+        id: resolve_url
+        uses: actions/github-script@v7
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          WORKER_NAME: ${{ steps.worker.outputs.name }}
+        with:
+          script: |
+            const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+            const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+            const workerName = process.env.WORKER_NAME;
+
+            async function cloudflare(path) {
+              const response = await fetch(`https://api.cloudflare.com/client/v4${path}`, {
+                headers: {
+                  Authorization: `Bearer ${apiToken}`,
+                  "Content-Type": "application/json"
+                }
+              });
+
+              const payload = await response.json();
+
+              if (!response.ok || payload.success === false) {
+                const messages = payload.errors?.map((error) => error.message).join(", ") || response.statusText;
+                throw new Error(messages);
+              }
+
+              return payload.result;
+            }
+
+            let environmentUrl = "";
+
+            try {
+              const domains = await cloudflare(`/accounts/${accountId}/workers/domains`);
+              const domain = domains.find((entry) => entry.service === workerName);
+
+              if (domain?.hostname) {
+                environmentUrl = `https://${domain.hostname}`;
+              } else {
+                const workerSubdomain = await cloudflare(`/accounts/${accountId}/workers/scripts/${workerName}/subdomain`);
+
+                if (workerSubdomain?.enabled) {
+                  const accountSubdomain = await cloudflare(`/accounts/${accountId}/workers/subdomain`);
+
+                  if (accountSubdomain?.subdomain) {
+                    environmentUrl = `https://${workerName}.${accountSubdomain.subdomain}.workers.dev`;
+                  }
+                }
+              }
+            } catch (error) {
+              core.warning(`Failed to resolve deployment URL: ${error instanceof Error ? error.message : String(error)}`);
+            }
+
+            if (!environmentUrl) {
+              core.warning("Deployment URL could not be resolved from Cloudflare.");
+              return;
+            }
+
+            core.setOutput("environment_url", environmentUrl);
+
+      - name: Mark deployment success
+        if: success()
+        uses: actions/github-script@v7
+        env:
+          DEPLOYMENT_URL: ${{ steps.resolve_url.outputs.environment_url }}
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: Number("${{ steps.create_deployment.outputs.deployment_id }}"),
+              state: "success",
+              environment: "production",
+              environment_url: process.env.DEPLOYMENT_URL || undefined,
+              log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
+
+      - name: Mark deployment failure
+        if: failure() && steps.create_deployment.outputs.deployment_id != ''
+        uses: actions/github-script@v7
+        env:
+          DEPLOYMENT_URL: ${{ steps.resolve_url.outputs.environment_url }}
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: Number("${{ steps.create_deployment.outputs.deployment_id }}"),
+              state: "failure",
+              environment: "production",
+              environment_url: process.env.DEPLOYMENT_URL || undefined,
+              log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
